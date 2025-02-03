@@ -25,7 +25,7 @@ const TaskList = ({tasks, onChangeTask, onDeleteTask}) => {
             <input 
               type="checkbox" 
               checked={task.done} 
-              onChange={() => onChangeTask({...task, done: task.done})}
+              onChange={() => onChangeTask({...task, done: !task.done})}
             />
             {
               isChangeMode === task.id
