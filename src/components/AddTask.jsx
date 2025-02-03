@@ -1,11 +1,12 @@
-import { useContext, useState } from 'react';
-import { TodoDispatchContext } from '../context/todoContext';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { added } from '../redux/slices/todosSlice';
 
 const AddTask = () => {
   const [task, setTask] = useState('')
-  const dispatch = useContext(TodoDispatchContext);
+  const dispatch = useDispatch();
   const addTaskFunc = () => {
-    dispatch({type:'added', id: nextId++, text:task})
+    dispatch(added(task))
     setTask('')
   }
   return (
@@ -15,5 +16,4 @@ const AddTask = () => {
     </>
   )
 }
-let nextId = 3;
 export default AddTask

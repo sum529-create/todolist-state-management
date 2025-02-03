@@ -1,11 +1,12 @@
-import { useContext, useState } from 'react';
-import { TodoContext, TodoDispatchContext } from '../context/todoContext';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { changed, deleted } from '../redux/slices/todosSlice';
 
 const TaskList = () => {
   const [isChangeMode, setIsChangeMode] = useState(null);
   const [updateTask, setUpdateTask] = useState('')
-  const tasks = useContext(TodoContext)
-  const dispatch = useContext(TodoDispatchContext);
+  const tasks = useSelector(state => state.todo)
+  const dispatch = useDispatch();
   const saveHandler = (task) => {
     setIsChangeMode(null);
     let newTask = {
@@ -13,7 +14,7 @@ const TaskList = () => {
       text: updateTask
     }
       
-    dispatch({type:'changed', task:newTask})
+    dispatch(changed(newTask))
   }
   const editTaskHandler = (task) => {
     setIsChangeMode(task.id)
@@ -27,7 +28,7 @@ const TaskList = () => {
             <input 
               type="checkbox" 
               checked={task.done} 
-              onChange={() => dispatch({type:'changed', task:{...task, done: !task.done}})}
+              onChange={() => dispatch(changed({...task, done: !task.done}))}
             />
             {
               isChangeMode === task.id
@@ -42,7 +43,7 @@ const TaskList = () => {
                 <button onClick={() => editTaskHandler(task)}>Edit</button>
               </>
             }
-            <button onClick={() => dispatch({type:'deleted', id:task.id})}>Delete</button>
+            <button onClick={() => dispatch(deleted(task))}>Delete</button>
           </li>
         ))
       }
