@@ -1,9 +1,11 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TodoContext, TodoDispatchContext } from '../context/todoContext';
 
-const TaskList = ({tasks, onChangeTask, onDeleteTask}) => {
+const TaskList = () => {
   const [isChangeMode, setIsChangeMode] = useState(null);
   const [updateTask, setUpdateTask] = useState('')
+  const tasks = useContext(TodoContext)
+  const dispatch = useContext(TodoDispatchContext);
   const saveHandler = (task) => {
     setIsChangeMode(null);
     let newTask = {
@@ -11,7 +13,7 @@ const TaskList = ({tasks, onChangeTask, onDeleteTask}) => {
       text: updateTask
     }
       
-    onChangeTask(newTask)
+    dispatch({type:'changed', task:newTask})
   }
   const editTaskHandler = (task) => {
     setIsChangeMode(task.id)
@@ -25,7 +27,7 @@ const TaskList = ({tasks, onChangeTask, onDeleteTask}) => {
             <input 
               type="checkbox" 
               checked={task.done} 
-              onChange={() => onChangeTask({...task, done: !task.done})}
+              onChange={() => dispatch({type:'changed', task:{...task, done: !task.done}})}
             />
             {
               isChangeMode === task.id
@@ -40,22 +42,12 @@ const TaskList = ({tasks, onChangeTask, onDeleteTask}) => {
                 <button onClick={() => editTaskHandler(task)}>Edit</button>
               </>
             }
-            <button onClick={() => onDeleteTask(task.id)}>Delete</button>
+            <button onClick={() => dispatch({type:'deleted', id:task.id})}>Delete</button>
           </li>
         ))
       }
     </ul>
   )
 }
-
-TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    text: PropTypes.string.isRequired,
-    done: PropTypes.bool.isRequired
-  })).isRequired,
-  onChangeTask: PropTypes.func.isRequired,
-  onDeleteTask: PropTypes.func.isRequired
-};
 
 export default TaskList;

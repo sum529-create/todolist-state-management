@@ -1,10 +1,11 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TodoDispatchContext } from '../context/todoContext';
 
-const AddTask = ({addTaskHandler}) => {
+const AddTask = () => {
   const [task, setTask] = useState('')
+  const dispatch = useContext(TodoDispatchContext);
   const addTaskFunc = () => {
-    addTaskHandler(task)
+    dispatch({type:'added', id: nextId++, text:task})
     setTask('')
   }
   return (
@@ -14,9 +15,5 @@ const AddTask = ({addTaskHandler}) => {
     </>
   )
 }
-
-AddTask.propTypes = {
-  addTaskHandler : PropTypes.func.isRequired
-}
-
+let nextId = 3;
 export default AddTask
